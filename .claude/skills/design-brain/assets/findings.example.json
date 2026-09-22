@@ -1,0 +1,81 @@
+{
+  "asset": "aw26-hero.png",
+  "asset_type": "image",
+  "generated": false,
+  "channel": "meta-feed",
+  "stage": "delivery",
+  "lanes_run": ["V", "C", "S"],
+  "not_checked": [
+    { "what": "Font family and weight", "why": "Flattened PNG supplied; no source file or text layers." },
+    { "what": "Lane G (generative integrity)", "why": "Asset is photographed, not generated." }
+  ],
+  "findings": [
+    {
+      "id": "f-01",
+      "lane": "V",
+      "rule_id": "V-LOGO-001",
+      "severity": "blocker",
+      "observed": "Wordmark sits 18px from the right edge. Clear space requires 34px (1x cap-height of 34px wordmark).",
+      "location": "top-right",
+      "fix": "Increase right margin to 34px minimum, or switch to the mark-only lockup at this width.",
+      "confidence": "certain"
+    },
+    {
+      "id": "f-02",
+      "lane": "C",
+      "rule_id": "C-CLAIM-002",
+      "severity": "blocker",
+      "observed": "Headline claims 'the longest-lasting finish' with no asterisk and no substantiation line.",
+      "location": "headline, line 1",
+      "fix": "Add the approved substantiation footnote, or drop to the non-comparative 'a long-lasting finish'.",
+      "confidence": "certain"
+    },
+    {
+      "id": "f-03",
+      "lane": "V",
+      "rule_id": "V-COLOR-006",
+      "severity": "major",
+      "observed": "Accent Amber #E8A33D covers ~31% of the canvas. Rule caps accent share at 10%.",
+      "location": "background gradient",
+      "fix": "Reduce the amber field to a supporting element; take the background to Bone #F4F1EC.",
+      "confidence": "certain"
+    },
+    {
+      "id": "f-04",
+      "lane": "V",
+      "rule_id": "V-TYPE-003",
+      "severity": "major",
+      "observed": "Subhead renders at 27px; the type scale has no 27px step (24 / 32 are adjacent).",
+      "location": "subhead beneath headline",
+      "fix": "Set to 24px, or 32px if the hierarchy needs the weight.",
+      "confidence": "likely"
+    },
+    {
+      "id": "f-05",
+      "lane": "V",
+      "rule_id": "V-COMP-002",
+      "severity": "minor",
+      "observed": "Product is centred. Corpus convention is off-centre with copy in the negative space (ex-p-04).",
+      "location": "whole frame",
+      "fix": "Shift product to the right third; move copy into the left negative space.",
+      "confidence": "certain"
+    },
+    {
+      "id": "f-06",
+      "lane": "S",
+      "rule_id": "S-RATIO-001",
+      "severity": "minor",
+      "observed": "Delivered at 1080x1080 (1:1). Brief specified Meta feed, where 4:5 is the brand's default.",
+      "location": "file",
+      "fix": "Also supply a 1080x1350 4:5 crop.",
+      "confidence": "certain"
+    }
+  ],
+  "observations": [
+    {
+      "id": "o-01",
+      "note": "The shadow under the product reads slightly heavier than the rest of the AW26 set. No rule covers shadow weight — worth a rule if the art director agrees it is a convention.",
+      "suggest_rule": true
+    }
+  ]
+}

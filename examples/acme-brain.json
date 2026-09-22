@@ -1,0 +1,259 @@
+{
+  "brain_version": "1.0",
+  "extends": null,
+  "brand": {
+    "name": "Acme Tools",
+    "slug": "acme",
+    "aliases": ["Acme", "ACME Tools Co."],
+    "category": "professional hand tools",
+    "markets": ["US", "DE"],
+    "owner": "priya@acme.example",
+    "updated": "2026-09-22",
+    "review_by": "2027-03-22"
+  },
+  "scope": {
+    "kind": "house",
+    "applies_to": ["all"],
+    "excludes": ["legacy-2019-system"]
+  },
+  "provenance": {
+    "sources": [
+      { "id": "s1", "type": "tokens", "uri": "figma://acme-ds/variables", "rung": 1,
+        "date": "2026-09-14", "weight": 1.0, "status": "current",
+        "notes": "Published DS library variables. Colour + type + spacing." },
+      { "id": "s2", "type": "guideline", "uri": "drive://Acme/Brand Guide v4.pdf", "rung": 2,
+        "date": "2025-11-02", "weight": 0.9, "status": "current",
+        "notes": "v4. Logo + claims chapters current; imagery chapter predates the 2026 grade." },
+      { "id": "s3", "type": "asset_corpus", "uri": "drive://Acme/Approved 2026", "rung": 5,
+        "date": "2026-09-14", "weight": 1.0, "n": 34, "status": "current",
+        "notes": "AW26 retail + always-on social across 3 campaigns. No OOH, no print." },
+      { "id": "s4", "type": "interview", "uri": "evidence/interview-2026-09-15.md", "rung": 3,
+        "date": "2026-09-15", "weight": 1.0, "status": "current",
+        "notes": "Priya Raman, Brand Director. 40 min. Arbiter of record." },
+      { "id": "s5", "type": "rejected_work", "uri": "drive://Acme/Killed AW26", "rung": 7,
+        "date": "2026-09-14", "weight": 1.0, "n": 11, "status": "current",
+        "notes": "Killed rounds with review notes attached. Source of negative exemplars." },
+      { "id": "s6", "type": "live_site", "uri": "https://acme.example", "rung": 6,
+        "date": "2026-09-16", "weight": 0.8, "status": "current",
+        "notes": "Computed styles, 6 templates, mobile + desktop." },
+      { "id": "s7", "type": "regulation", "uri": "FTC Endorsement & Claims Guides", "rung": 2,
+        "date": "2026-01-01", "weight": 1.0, "status": "current",
+        "notes": "External authority. Substantiation requirements for comparative claims." },
+      { "id": "s8", "type": "platform_policy", "uri": "Meta Advertising Standards", "rung": 2,
+        "date": "2026-09-20", "weight": 1.0, "status": "current",
+        "notes": "Checked 2026-09-20. Re-verify quarterly." },
+      { "id": "s9", "type": "generation_history", "uri": "higgsfield://acme/generations", "rung": 5,
+        "date": "2026-09-18", "weight": 0.9, "n": 62, "status": "current",
+        "notes": "62 generations with used/discarded outcomes. 19 used." }
+    ]
+  },
+  "identity": {
+    "positioning": "Precision tools for people who take the work seriously.",
+    "personality": ["understated", "exact", "warm at the edges", "built to last"],
+    "anti_personality": ["playful", "disruptive", "loud", "tech-startup"],
+    "audience": "Professional and serious amateur makers, 28-55. Buy once, keep for decades.",
+    "competitors_avoided": [
+      { "name": "Voltcraft", "why": "High-saturation gradients and floating hero products read as consumer-cheap." },
+      { "name": "Bldr", "why": "Lifestyle-first, tool-second. Ours is the opposite — the tool is the subject." }
+    ]
+  },
+  "principles": [
+    { "id": "P-01", "statement": "The product is always shown in use, never floating.", "source_ids": ["s2", "s3"] },
+    { "id": "P-02", "statement": "Materials read honestly — steel looks like steel, no chrome fantasy.", "source_ids": ["s4"] },
+    { "id": "P-03", "statement": "We show the work, not the lifestyle around the work.", "source_ids": ["s4", "s5"] }
+  ],
+  "rules": [
+    {
+      "id": "V-COLOR-001", "lane": "V", "dimension": "color",
+      "statement": "Core palette is Bone #F4F1EC, Ink #101418 and Amber #E8A33D. Fills outside these sit under the accent share cap.",
+      "check": { "mode": "mechanical", "kind": "color_presence",
+                 "params": { "allowed": ["#F4F1EC", "#101418", "#E8A33D"], "tolerance_deltaE": 3 } },
+      "severity": "major", "confidence": "stated",
+      "support": { "source_ids": ["s1", "s2"] },
+      "exceptions": ["Photographic content within imagery is exempt; this governs graphic fills."],
+      "fix_hint": "Map the off-palette fill to the nearest core colour, or justify it as photographic content.",
+      "added": "2026-09-22"
+    },
+    {
+      "id": "V-COLOR-004", "lane": "V", "dimension": "color",
+      "statement": "Pure black #000000 is never used. Ink #101418 is the darkest value.",
+      "check": { "mode": "mechanical", "kind": "color_presence",
+                 "params": { "forbidden": ["#000000"], "tolerance_deltaE": 3 } },
+      "severity": "major", "confidence": "inferred",
+      "support": { "count": 31, "of": 34, "source_ids": ["s3", "s6"] },
+      "exceptions": ["Print CMYK builds where registration black is a production requirement."],
+      "fix_hint": "Replace #000000 fills with Ink #101418.",
+      "added": "2026-09-22"
+    },
+    {
+      "id": "V-COLOR-006", "lane": "V", "dimension": "color",
+      "statement": "Amber #E8A33D is an accent and covers no more than 10% of any canvas.",
+      "check": { "mode": "mechanical", "kind": "palette_share",
+                 "params": { "color": "#E8A33D", "max_pct": 10 } },
+      "severity": "major", "confidence": "inferred",
+      "support": { "count": 30, "of": 34, "source_ids": ["s3"] },
+      "exceptions": ["Packaging end-frames, where amber is the ground by design."],
+      "fix_hint": "Reduce the amber field to a supporting element; take large grounds to Bone #F4F1EC.",
+      "added": "2026-09-22"
+    },
+    {
+      "id": "V-TYPE-003", "lane": "V", "dimension": "typography",
+      "statement": "Type sits on the scale: 12, 14, 16, 20, 24, 32, 44, 60px. No intermediate sizes.",
+      "check": { "mode": "mechanical", "kind": "type_scale",
+                 "params": { "allowed_px": [12, 14, 16, 20, 24, 32, 44, 60], "min_px": 12 } },
+      "severity": "major", "confidence": "stated",
+      "support": { "source_ids": ["s1"] },
+      "exceptions": [],
+      "fix_hint": "Snap to the nearest scale step; pick the larger one when hierarchy is at stake.",
+      "added": "2026-09-22"
+    },
+    {
+      "id": "V-LOGO-001", "lane": "V", "dimension": "logo",
+      "statement": "Logo clear space is at least 1x the wordmark cap-height on all four sides.",
+      "check": { "mode": "mechanical", "kind": "clear_space",
+                 "params": { "multiple_of": 1.0, "reference": "wordmark_cap_height" } },
+      "severity": "blocker", "confidence": "stated",
+      "support": { "source_ids": ["s2", "s4"] },
+      "exceptions": [],
+      "fix_hint": "Increase the margin to 1x cap-height, or drop to the mark-only lockup at tight widths.",
+      "added": "2026-09-22"
+    },
+    {
+      "id": "V-COMP-002", "lane": "V", "dimension": "composition",
+      "statement": "The product sits off-centre with copy in the resulting negative space. Centred hero compositions are not used.",
+      "check": { "mode": "rubric",
+                 "rubric": "4 = off-centre with copy occupying the negative space, as ex-p-04. 2 = neutral crop, no clear strategy. 0 = centred hero with symmetric copy, as ex-n-02." },
+      "severity": "minor", "confidence": "inferred",
+      "support": { "count": 28, "of": 34, "source_ids": ["s3", "s5"] },
+      "exceptions": ["Square social crops where the placement forces symmetry."],
+      "fix_hint": "Shift the product to a third; move copy into the opposing negative space.",
+      "added": "2026-09-22"
+    },
+    {
+      "id": "C-CLAIM-002", "lane": "C", "dimension": "claims",
+      "statement": "Comparative and superlative performance claims carry approved substantiation on the same surface.",
+      "check": { "mode": "mechanical", "kind": "text_presence",
+                 "params": { "match": "semantic", "required": ["substantiation footnote when a comparative claim is present"] } },
+      "severity": "blocker", "confidence": "stated",
+      "support": { "source_ids": ["s7", "s2"] },
+      "exceptions": [],
+      "fix_hint": "Add the approved substantiation line, or rewrite to a non-comparative claim.",
+      "added": "2026-09-22"
+    },
+    {
+      "id": "C-TERM-001", "lane": "C", "dimension": "terminology",
+      "statement": "Product names are written exactly as the range sheet lists them, including spacing and case.",
+      "check": { "mode": "mechanical", "kind": "terminology",
+                 "params": { "preferred": { "Acme Pro-Grip": ["ProGrip", "Pro Grip", "pro-grip"] },
+                             "banned": ["ACME PRO GRIP"] } },
+      "severity": "major", "confidence": "stated",
+      "support": { "source_ids": ["s2", "s4"] },
+      "exceptions": [],
+      "fix_hint": "Correct to the range-sheet spelling.",
+      "added": "2026-09-22"
+    },
+    {
+      "id": "C-VOICE-002", "lane": "C", "dimension": "voice",
+      "statement": "Headlines state a fact about the tool. They do not use wordplay, exclamation, or second-person hype.",
+      "check": { "mode": "rubric",
+                 "rubric": "4 = plain declarative fact about the tool, as ex-p-07. 2 = neutral but generic. 0 = pun, exclamation, or 'you' hype, as ex-n-05." },
+      "severity": "major", "confidence": "inferred",
+      "support": { "count": 36, "of": 41, "source_ids": ["s3", "s5"] },
+      "exceptions": [],
+      "fix_hint": "Rewrite as a plain statement about what the tool does or is made of.",
+      "added": "2026-09-22"
+    },
+    {
+      "id": "S-RATIO-001", "lane": "S", "dimension": "ratio",
+      "statement": "Meta feed placements are delivered 4:5 rather than 1:1.",
+      "check": { "mode": "mechanical", "kind": "aspect_ratio",
+                 "params": { "allowed": ["4:5"], "tolerance": 0.01 } },
+      "severity": "minor", "confidence": "assumed",
+      "support": { "count": 4, "of": 7, "source_ids": ["s3"] },
+      "exceptions": [],
+      "fix_hint": "Supply a 1080x1350 crop alongside the square.",
+      "added": "2026-09-22"
+    },
+    {
+      "id": "G-TEXT-001", "lane": "G", "dimension": "text_rendering",
+      "statement": "Logos, packaging copy and any legible in-frame text are composited from real assets, never generated.",
+      "check": { "mode": "mechanical", "kind": "text_presence",
+                 "params": { "match": "semantic", "forbidden": ["generated logo", "generated packaging copy", "illegible or misspelled in-frame text"] } },
+      "severity": "blocker", "confidence": "stated",
+      "support": { "source_ids": ["s4"] },
+      "exceptions": [],
+      "fix_hint": "Composite the real logo/pack art over the generation, or remove the text from frame.",
+      "added": "2026-09-22"
+    },
+    {
+      "id": "G-STYLE-003", "lane": "G", "dimension": "model_signature",
+      "statement": "Generated imagery keeps the brand's single-source directional light. Default model rim-lighting and over-smooth surfaces are corrected before delivery.",
+      "check": { "mode": "rubric",
+                 "rubric": "4 = matches the corpus grade, single light source, honest material. 2 = neutral studio light. 0 = double rim-light, plastic sheen, HDR local contrast, as ex-n-09." },
+      "severity": "major", "confidence": "inferred",
+      "support": { "count": 17, "of": 19, "source_ids": ["s9"] },
+      "exceptions": [],
+      "fix_hint": "Re-prompt with the corpus lighting description, or grade the output back to the brand curve.",
+      "added": "2026-09-22"
+    }
+  ],
+  "exemplars": {
+    "positive": [
+      { "id": "ex-p-04", "uri": "evidence/approved/aw26-hero-03.jpg",
+        "why": "Canonical: tool in a working hand, off-centre right, single window light, copy in the left negative space.",
+        "illustrates": ["V-COMP-002", "P-01", "P-03"] },
+      { "id": "ex-p-07", "uri": "evidence/approved/aw26-social-11.jpg",
+        "why": "Headline reads 'Forged in one piece.' — a plain fact about the tool, no wordplay.",
+        "illustrates": ["C-VOICE-002"] },
+      { "id": "ex-p-12", "uri": "evidence/approved/aw26-retail-02.jpg",
+        "why": "Amber used as a 6% accent on the price flash only; ground stays Bone.",
+        "illustrates": ["V-COLOR-006", "V-COLOR-001"] },
+      { "id": "ex-p-15", "uri": "evidence/generated/gen-041.jpg",
+        "why": "Generated and used: single-source light, honest steel, matches the corpus grade.",
+        "illustrates": ["G-STYLE-003"] }
+    ],
+    "negative": [
+      { "id": "ex-n-02", "uri": "evidence/killed/aw26-hero-alt-07.jpg",
+        "why": "Killed in review: tool floating and centred on an amber gradient. Review note: 'this is Voltcraft'.",
+        "violates": ["V-COMP-002", "V-COLOR-006", "P-01"] },
+      { "id": "ex-n-05", "uri": "evidence/killed/aw26-copy-r2.jpg",
+        "why": "Killed: headline 'Get a grip on your weekend!' — pun plus exclamation plus second person.",
+        "violates": ["C-VOICE-002"] },
+      { "id": "ex-n-09", "uri": "evidence/generated/gen-022.jpg",
+        "why": "Discarded generation: double rim-light and plastic sheen on the steel. Reads as stock 3D.",
+        "violates": ["G-STYLE-003", "P-02"] }
+    ]
+  },
+  "channels": [
+    {
+      "id": "meta-feed", "label": "Meta / Instagram feed",
+      "checks": [
+        { "kind": "aspect_ratio", "params": { "allowed": ["4:5", "1:1"], "tolerance": 0.01 } },
+        { "kind": "dimensions", "params": { "min_w": 1080, "min_h": 1080 } },
+        { "kind": "file_size", "params": { "max_bytes": 31457280 } }
+      ],
+      "verified": "2026-09-20", "source_ids": ["s8"]
+    },
+    {
+      "id": "meta-reels", "label": "Meta / Instagram Reels",
+      "checks": [
+        { "kind": "aspect_ratio", "params": { "allowed": ["9:16"], "tolerance": 0.01 } },
+        { "kind": "dimensions", "params": { "min_w": 1080, "min_h": 1920 } },
+        { "kind": "duration", "params": { "min_s": 3, "max_s": 90 } },
+        { "kind": "safe_zone", "params": { "top_pct": 12, "bottom_pct": 20, "left_pct": 6, "right_pct": 6 } }
+      ],
+      "verified": "2026-09-20", "source_ids": ["s8"]
+    }
+  ],
+  "open_questions": [
+    { "id": "q-01",
+      "question": "Is 4:5 actually the standard for Meta feed, or did the 1:1 deliveries reflect a client request? Only 4 of 7 delivered assets were 4:5.",
+      "blocks": ["S-RATIO-001"], "asked_of": "priya@acme.example", "status": "open" },
+    { "id": "q-02",
+      "question": "Does the #000000 ban extend to print CMYK builds, where registration black may be a production requirement?",
+      "blocks": ["V-COLOR-004"], "asked_of": "priya@acme.example", "status": "open" },
+    { "id": "q-03",
+      "question": "Guide v4's imagery chapter specifies a cool grade, but all 34 AW26 assets use a warm one. Which is current?",
+      "blocks": [], "asked_of": "priya@acme.example", "status": "open" }
+  ]
+}

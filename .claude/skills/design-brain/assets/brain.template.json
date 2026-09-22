@@ -1,0 +1,67 @@
+{
+  "brain_version": "1.0",
+  "extends": null,
+  "brand": {
+    "name": "",
+    "slug": "",
+    "aliases": [],
+    "category": "",
+    "markets": [],
+    "owner": "",
+    "updated": "",
+    "review_by": ""
+  },
+  "scope": {
+    "kind": "house",
+    "applies_to": ["all"],
+    "excludes": []
+  },
+  "provenance": {
+    "sources": [
+      {
+        "id": "s1",
+        "type": "asset_corpus",
+        "uri": "",
+        "rung": 5,
+        "date": "",
+        "weight": 1.0,
+        "n": 0,
+        "status": "current",
+        "notes": "What is in here, and what is NOT — gaps matter as much as contents."
+      }
+    ]
+  },
+  "identity": {
+    "positioning": "",
+    "personality": [],
+    "anti_personality": [],
+    "audience": "",
+    "competitors_avoided": []
+  },
+  "principles": [],
+  "rules": [
+    {
+      "id": "V-COLOR-001",
+      "lane": "V",
+      "dimension": "color",
+      "statement": "",
+      "check": {
+        "mode": "mechanical",
+        "kind": "color_presence",
+        "params": { "allowed": [], "forbidden": [], "tolerance_deltaE": 3 }
+      },
+      "severity": "minor",
+      "confidence": "assumed",
+      "support": { "count": 0, "of": 0, "source_ids": ["s1"] },
+      "exceptions": [],
+      "fix_hint": "",
+      "added": ""
+    }
+  ],
+  "exemplars": {
+    "positive": [],
+    "negative": []
+  },
+  "channels": [],
+  "open_questions": []
+}

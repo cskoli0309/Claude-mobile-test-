@@ -1,0 +1,196 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://design-brain.dev/schema/brain-1.0.json",
+  "title": "Design Brain",
+  "description": "A portable, evidence-backed model of a brand's design system, used for curation and QC.",
+  "type": "object",
+  "required": ["brain_version", "brand", "scope", "provenance", "rules"],
+  "additionalProperties": false,
+  "properties": {
+    "brain_version": { "type": "string", "const": "1.0" },
+    "extends": {
+      "type": ["string", "null"],
+      "description": "Path to a parent brain. Child carries deltas only; rules merge by id, child replaces parent."
+    },
+    "brand": {
+      "type": "object",
+      "required": ["name", "slug", "updated"],
+      "properties": {
+        "name": { "type": "string" },
+        "slug": { "type": "string", "pattern": "^[a-z0-9-]+$" },
+        "aliases": { "type": "array", "items": { "type": "string" } },
+        "category": { "type": "string" },
+        "markets": { "type": "array", "items": { "type": "string" } },
+        "owner": { "type": "string", "description": "Arbiter who can promote rules to 'stated'. Required for any brain containing blockers." },
+        "updated": { "type": "string", "format": "date" },
+        "review_by": { "type": "string", "format": "date" }
+      }
+    },
+    "scope": {
+      "type": "object",
+      "required": ["kind"],
+      "properties": {
+        "kind": { "enum": ["house", "sub_brand", "campaign", "channel"] },
+        "applies_to": { "type": "array", "items": { "type": "string" } },
+        "excludes": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "provenance": {
+      "type": "object",
+      "required": ["sources"],
+      "properties": {
+        "sources": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "type", "rung"],
+            "properties": {
+              "id": { "type": "string" },
+              "type": {
+                "enum": ["tokens", "guideline", "interview", "component_library",
+                         "asset_corpus", "live_site", "rejected_work", "competitor",
+                         "generation_history", "regulation", "platform_policy"]
+              },
+              "uri": { "type": "string" },
+              "rung": { "type": "integer", "minimum": 1, "maximum": 8 },
+              "date": { "type": "string", "format": "date" },
+              "weight": { "type": "number", "minimum": 0, "maximum": 1 },
+              "n": { "type": "integer", "minimum": 0 },
+              "status": { "enum": ["current", "superseded", "unverified"] },
+              "notes": { "type": "string" }
+            }
+          }
+        }
+      }
+    },
+    "identity": {
+      "type": "object",
+      "properties": {
+        "positioning": { "type": "string" },
+        "personality": { "type": "array", "items": { "type": "string" } },
+        "anti_personality": { "type": "array", "items": { "type": "string" } },
+        "audience": { "type": "string" },
+        "competitors_avoided": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["name", "why"],
+            "properties": { "name": { "type": "string" }, "why": { "type": "string" } }
+          }
+        }
+      }
+    },
+    "principles": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "statement"],
+        "properties": {
+          "id": { "type": "string" },
+          "statement": { "type": "string" },
+          "source_ids": { "type": "array", "items": { "type": "string" } }
+        }
+      }
+    },
+    "rules": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "lane", "dimension", "statement", "check", "severity", "confidence"],
+        "properties": {
+          "id": { "type": "string", "pattern": "^[VCSG]-[A-Z]+-[0-9]{3}$" },
+          "lane": { "enum": ["V", "C", "S", "G"] },
+          "dimension": { "type": "string" },
+          "statement": { "type": "string", "minLength": 10 },
+          "check": {
+            "type": "object",
+            "required": ["mode"],
+            "properties": {
+              "mode": { "enum": ["mechanical", "rubric"] },
+              "kind": {
+                "enum": ["color_presence", "color_contrast", "palette_share", "aspect_ratio",
+                         "dimensions", "file_size", "duration", "safe_zone", "type_scale",
+                         "font_family", "clear_space", "text_presence", "terminology"]
+              },
+              "params": { "type": "object" },
+              "rubric": { "type": "string", "description": "For mode=rubric: how to score 0-4 against exemplars." }
+            }
+          },
+          "severity": { "enum": ["blocker", "major", "minor", "note"] },
+          "confidence": { "enum": ["stated", "inferred", "assumed"] },
+          "support": {
+            "type": "object",
+            "properties": {
+              "count": { "type": "integer", "minimum": 0 },
+              "of": { "type": "integer", "minimum": 1 },
+              "source_ids": { "type": "array", "items": { "type": "string" } }
+            }
+          },
+          "channels": { "type": "array", "items": { "type": "string" }, "description": "Limit rule to these channel ids. Omit for all." },
+          "exceptions": { "type": "array", "items": { "type": "string" } },
+          "fix_hint": { "type": "string" },
+          "added": { "type": "string", "format": "date" }
+        }
+      }
+    },
+    "exemplars": {
+      "type": "object",
+      "properties": {
+        "positive": { "type": "array", "items": { "$ref": "#/definitions/exemplar" } },
+        "negative": { "type": "array", "items": { "$ref": "#/definitions/exemplar" } }
+      }
+    },
+    "channels": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "label", "checks"],
+        "properties": {
+          "id": { "type": "string" },
+          "label": { "type": "string" },
+          "checks": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["kind", "params"],
+              "properties": {
+                "kind": { "type": "string" },
+                "params": { "type": "object" }
+              }
+            }
+          },
+          "verified": { "type": ["string", "null"], "format": "date" },
+          "source_ids": { "type": "array", "items": { "type": "string" } }
+        }
+      }
+    },
+    "open_questions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "question", "status"],
+        "properties": {
+          "id": { "type": "string" },
+          "question": { "type": "string" },
+          "blocks": { "type": "array", "items": { "type": "string" } },
+          "asked_of": { "type": "string" },
+          "status": { "enum": ["open", "answered", "wontfix"] },
+          "answer": { "type": "string" }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "exemplar": {
+      "type": "object",
+      "required": ["id", "why"],
+      "properties": {
+        "id": { "type": "string" },
+        "uri": { "type": "string" },
+        "why": { "type": "string" },
+        "illustrates": { "type": "array", "items": { "type": "string" } },
+        "violates": { "type": "array", "items": { "type": "string" } }
+      }
+    }
+  }
+}
