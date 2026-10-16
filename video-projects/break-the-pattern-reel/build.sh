@@ -1,5 +1,5 @@
 #!/bin/bash
-# "Break the pattern" reel, cut to music.mp3 (13.0s, 1080x1920, 30fps).
+# "Break the pattern" reel, cut to music.mp3 (13.0s, 4K 2160x3840, 30fps).
 # While the voice speaks, the lettering writes itself, each word finishing as it is
 # spoken (writing.py time-remaps the timelapses). Only when the voice stops and the
 # beat hits (3.08-3.55, 6.23-6.65, 9.03-13.0) does the eye artwork come in.
@@ -35,11 +35,11 @@ still $B 12 "$(ez 1.35 1.25 562 1000 562 1000 12),$(pulse)" e05.mp4           # 
 still $B 12 "$(ez 3.6 3.3 538 1248 538 1248 12),$(pulse)" e06.mp4             # small eye, bottom
 still $B 11 "$(ez 3.4 3.1 800 1150 800 1150 11),$(pulse)" e07.mp4             # small eye, right
 still $A 12 "$(ez 3.6 3.3 930 1680 930 1680 12),$(pulse)" e08.mp4             # background eye, bottom right
-still $B 12 "$(ez 3.0 1.6 614 854 614 854 12),$(pulse)" e09.mp4               # big eye pulls out
-still $B 13 "$(ez 1.15 1.0 562 960 562 960 13),$(pulse)" e10.mp4              # framed eyes, ends with the music
+# 12.17 last beat: the final artwork, pulse again on 12.56, ends with the music
+ffmpeg -v error -y -loop 1 -framerate 30 -i $A -vf "$FIT,$(ez 1.06 1.0 540 960 540 960 25),scale=w='trunc(1080*(1+0.06*exp(-n*0.35)+0.05*if(gte(n,12),exp(-(n-12)*0.35),0))/2)*2':h='trunc(1920*(1+0.06*exp(-n*0.35)+0.05*if(gte(n,12),exp(-(n-12)*0.35),0))/2)*2':eval=frame,crop=1080:1920" $ENC -frames:v 25 final.mp4
 
-printf "file '%s'\n" p1.mp4 h1a.mp4 h1b.mp4 p2.mp4 h2a.mp4 h2b.mp4 p3.mp4 e01.mp4 e02.mp4 e03.mp4 e04.mp4 e05.mp4 e06.mp4 e07.mp4 e08.mp4 e09.mp4 e10.mp4 > list.txt
+printf "file '%s'\n" p1.mp4 h1a.mp4 h1b.mp4 p2.mp4 h2a.mp4 h2b.mp4 p3.mp4 e01.mp4 e02.mp4 e03.mp4 e04.mp4 e05.mp4 e06.mp4 e07.mp4 e08.mp4 final.mp4 > list.txt
 ffmpeg -v error -y -f concat -safe 0 -i list.txt -i $DIR/music.mp3 -map 0:v -map 1:a \
-  -vf "noise=alls=4:allf=t,vignette=PI/8,format=yuv420p" -r 30 -c:v libx264 -preset slow -crf 19 -maxrate 14M -bufsize 28M -profile:v high \
+  -vf "scale=2160:3840:flags=lanczos,unsharp=5:5:0.4,noise=alls=4:allf=t,vignette=PI/8,format=yuv420p" -r 30 -c:v libx264 -preset slow -crf 18 -maxrate 45M -bufsize 90M -profile:v high -level 5.1 \
   -c:a aac -b:a 192k -movflags +faststart -t 13 $DIR/break-the-pattern-reel.mp4
 ffprobe -v error -show_entries stream=codec_type,duration,nb_frames -of compact $DIR/break-the-pattern-reel.mp4
