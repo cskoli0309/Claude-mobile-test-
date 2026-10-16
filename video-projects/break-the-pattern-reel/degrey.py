@@ -20,12 +20,13 @@ def clean(f):
 def is_flash(f):
     s=f[::8,::8].astype(np.int16)
     return s[...,2].mean()>120 or s.mean()>90
-keep='--keep-grey' in sys.argv
-src=sys.stdin.buffer; dst=sys.stdout.buffer; last=None
-while True:
-    b=src.read(n)
-    if len(b)<n: break
-    f=np.frombuffer(b,np.uint8).reshape(H,W,3)
-    if is_flash(f) and last is not None: out=last
-    else: out=f if keep else clean(f)
-    last=out; dst.write(out.tobytes())
+if __name__=='__main__':
+  keep='--keep-grey' in sys.argv
+  src=sys.stdin.buffer; dst=sys.stdout.buffer; last=None
+  while True:
+      b=src.read(n)
+      if len(b)<n: break
+      f=np.frombuffer(b,np.uint8).reshape(H,W,3)
+      if is_flash(f) and last is not None: out=last
+      else: out=f if keep else clean(f)
+      last=out; dst.write(out.tobytes())
