@@ -1,8 +1,8 @@
 #!/bin/bash
 # "Break the pattern" reel, cut to music.mp3 (13.0s, 1080x1920, 30fps).
-# 0-9.03s  voiceover says the line three times -> the lettering writes itself, each word
-#          finishing as it is spoken (writing.py time-remaps the timelapses).
-# 9.03s    beat drop -> eye artwork, one shot per beat (~0.3925s).
+# While the voice speaks, the lettering writes itself, each word finishing as it is
+# spoken (writing.py time-remaps the timelapses). Only when the voice stops and the
+# beat hits (3.08-3.55, 6.23-6.65, 9.03-13.0) does the eye artwork come in.
 set -e
 S=/tmp/claude-0/-home-user-Claude-mobile-test-/4aa42345-96bf-5298-9600-802b21be64c8/scratchpad
 U=/root/.claude/uploads/4aa42345-96bf-5298-9600-802b21be64c8
@@ -18,10 +18,14 @@ pulse(){ echo "scale=w='trunc(1080*(1+0.07*exp(-n*0.35))/2)*2':h='trunc(1920*(1+
 still(){ ffmpeg -v error -y -loop 1 -framerate 30 -i $1 -vf "$FIT,$3" $ENC -frames:v $2 $4; }
 writing(){ (cd $DIR && python3 writing.py $1 $P1 $P2) | ffmpeg -v error -y -f rawvideo -pix_fmt rgb24 -s 1080x1920 -r 30 -i - $ENC $1.mp4; }
 
-# --- voiceover: the lettering writes itself, three times ---
-writing p1     # 0.00 "Break the pattern today, or the loop will repeat tomorrow"
-writing p2     # 2.96 same line again: camera follows each word as it is spoken
-writing p3     # 6.02 "You must break the pattern today, or the loop will"
+# --- voice: the lettering writes itself; beat hits between lines: eye artwork ---
+writing p1                                                                      # 0.00 voice, line 1
+still $B 8 "$(ez 1.05 1.0 562 960 562 960 8),$(pulse)" h1a.mp4                  # 3.08 beat hit
+still $B 7 "$(ez 2.3 2.15 614 854 614 854 7),$(pulse)" h1b.mp4                  # 3.35
+writing p2                                                                      # 3.55 voice, line 2
+still $B 6 "$(ez 3.4 3.2 640 600 640 600 6),$(pulse)" h2a.mp4                   # 6.23 beat hit
+still $A 7 "$(ez 3.8 3.5 340 240 340 240 7),$(pulse)" h2b.mp4                   # 6.43
+writing p3                                                                      # 6.65 voice, line 3
 # --- beat drop 9.03: eye artwork, one shot per beat ---
 still $B 12 "$(ez 1.0 1.0 562 960 562 960 12),$(pulse)" e01.mp4               # framed eyes
 still $B 12 "$(ez 2.3 2.1 614 854 614 854 12),$(pulse)" e02.mp4               # the big eye
@@ -34,7 +38,7 @@ still $A 12 "$(ez 3.6 3.3 930 1680 930 1680 12),$(pulse)" e08.mp4             # 
 still $B 12 "$(ez 3.0 1.6 614 854 614 854 12),$(pulse)" e09.mp4               # big eye pulls out
 still $B 13 "$(ez 1.15 1.0 562 960 562 960 13),$(pulse)" e10.mp4              # framed eyes, ends with the music
 
-printf "file '%s'\n" p1.mp4 p2.mp4 p3.mp4 e01.mp4 e02.mp4 e03.mp4 e04.mp4 e05.mp4 e06.mp4 e07.mp4 e08.mp4 e09.mp4 e10.mp4 > list.txt
+printf "file '%s'\n" p1.mp4 h1a.mp4 h1b.mp4 p2.mp4 h2a.mp4 h2b.mp4 p3.mp4 e01.mp4 e02.mp4 e03.mp4 e04.mp4 e05.mp4 e06.mp4 e07.mp4 e08.mp4 e09.mp4 e10.mp4 > list.txt
 ffmpeg -v error -y -f concat -safe 0 -i list.txt -i $DIR/music.mp3 -map 0:v -map 1:a \
   -vf "noise=alls=4:allf=t,vignette=PI/8,format=yuv420p" -r 30 -c:v libx264 -preset slow -crf 19 -maxrate 14M -bufsize 28M -profile:v high \
   -c:a aac -b:a 192k -movflags +faststart -t 13 $DIR/break-the-pattern-reel.mp4

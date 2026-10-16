@@ -12,12 +12,15 @@ SRC={'start':2.5,'Break':18,'pattern':27,'today':39,'loop':56,'will':62.2,'repea
 WORDY={'Break':690,'pattern':830,'today':930,'loop':1070,'will':1070,'repeat':1170,'tomorrow':1320}
 # (out_seconds, word finished) from the voiceover transcript, per pass; plus frames and camera keys (t,z,cy)
 PASSES={
- 'p1':dict(n=89, keys=[(0,'start'),(0.6,'Break'),(0.98,'pattern'),(1.30,'today'),(2.02,'loop'),(2.22,'will'),(2.50,'repeat'),(2.96,'tomorrow')],
-           cam=[(0,1.0,960),(2.96,1.06,960)]),
- 'p2':dict(n=92, keys=[(0,'start'),(0.68,'Break'),(1.18,'pattern'),(1.50,'today'),(2.22,'loop'),(2.42,'will'),(2.68,'repeat'),(3.06,'tomorrow')],
-           cam=[(0,1.8,690),(0.55,1.8,690),(0.9,1.8,830),(1.25,1.8,930),(1.75,1.7,1070),(2.35,1.7,1170),(2.72,1.6,1320),(3.06,1.5,1300)]),
- 'p3':dict(n=90, keys=[(0,'start'),(0.6,'start'),(1.22,'Break'),(1.72,'pattern'),(2.06,'today'),(2.80,'loop'),(3.0,'will')],
-           cam=[(0,1.0,960),(3.0,1.18,960)]),
+ # 0.00-3.08 "Break the pattern today, or the loop will repeat tomorrow"
+ 'p1':dict(n=92, keys=[(0,'start'),(0.52,'Break'),(0.98,'pattern'),(1.38,'today'),(2.06,'loop'),(2.24,'will'),(2.50,'repeat'),(3.02,'tomorrow')],
+           cam=[(0,1.0,960),(3.07,1.06,960)]),
+ # 3.55-6.23 the same line again; the camera follows each word as it is spoken
+ 'p2':dict(n=80, keys=[(0,'start'),(0.25,'Break'),(0.60,'pattern'),(0.97,'today'),(1.67,'loop'),(1.81,'will'),(2.09,'repeat'),(2.61,'tomorrow')],
+           cam=[(0,1.8,690),(0.3,1.8,690),(0.6,1.8,830),(0.97,1.8,930),(1.67,1.7,1070),(2.09,1.7,1170),(2.45,1.6,1320),(2.67,1.55,1300)]),
+ # 6.65-9.03 "You must break the pattern today, or the loop..."
+ 'p3':dict(n=71, keys=[(0,'start'),(0.25,'start'),(0.61,'Break'),(1.07,'pattern'),(1.51,'today'),(2.23,'loop'),(2.37,'will')],
+           cam=[(0,1.0,960),(2.37,1.18,960)]),
 }
 def interp(keys,t):
     for (t0,a),(t1,b) in zip(keys,keys[1:]):
